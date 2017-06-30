@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Volume Tray Icon
+Exec=volumeicon
+Comment=Volume Icon on status bar
+X-GNOME-Autostart-enabled=true
