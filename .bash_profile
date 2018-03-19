@@ -45,6 +45,7 @@
 #   ------------------------------------------------------------
 #    echo "PATH before SET PATHS in PROFILE" $PATH
     export PATH="/usr/local/git/bin:/sw/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:$HOME/.bin:$PATH"
+    export PATH="$HOME/Projects/bin/:$PATH"
 #    echo "PATH AFTER SET PATHS in PROFILE" $PATH
 
 
@@ -86,6 +87,7 @@
     alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
     alias ~="cd ~"                              # ~:            Go Home
     alias c='clear'                             # c:            Clear terminal display
+    alias chistory='cat /dev/null > ~/.bash_history && history -c && exit' # chistory: Clear All History for Bash
     alias which='type -all'                     # which:        Find executables
     alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
     alias show_options='shopt'                  # Show_options: display bash options settings
@@ -228,6 +230,7 @@ EOT
 #   -----------------------------------------------------
     alias memHogsTop='top -l 1 -o rsize | head -20'
     alias memHogsPs='ps wwaxm -o pid,stat,vsize,rss,time,command | head -10'
+    alias memCacheClear='sudo sync; sudo -c "echo 3 > /proc/sys/vm/drop_caches"'
 
 
 #   cpuHogs:  Find CPU hogs
@@ -334,8 +337,34 @@ EOT
 #   9. Personalizations
 #   ---------------------------------------
 
+    setProxy () {
+      echo -n "Proxy Information: <username>:<password>@<url>:<port> "
+      read proxy
+      export HTTP_PROXY=$proxy
+      export http_proxy=$HTTP_PROXY
+      export HTTPS_PROXY=$HTTP_PROXY
+      export https_proxy=$HTTP_PROXY
+    }
+    unsetProxy () {
+      unset HTTP_PROXY;
+      unset http_proxy;
+      unset HTTPS_PROXY;
+      unset https_proxy;
+    }
+    chromium-proxy () {
+      chromium-browser --proxy-server=$HTTP_PROXY
+    }
+
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 #   ---------------------------------------
-#   10. REMINDERS & NOTES
+#   10. SNAP Configuration
+#   ---------------------------------------
+    export GOPATH="$HOME/Projects"
+#   ---------------------------------------
+#   11. REMINDERS & NOTES
 #   ---------------------------------------
 
 

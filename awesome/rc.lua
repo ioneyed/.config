@@ -10,6 +10,8 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local net_widgets = require("modules/net_widgets")
+
 -- Load Debian menu entries
 require("debian.menu")
 
@@ -88,6 +90,26 @@ local function client_menu_toggle_fn()
         end
     end
 end
+-- }}}
+
+-- {{{ Custom Widgets
+
+-- Network Widget
+net_wireless = net_widgets.wireless({interface   = "wlp3s0", 
+                                     onclick     = terminal .. " -e sudo wifi-menu" })
+-- Battery Widget
+batterywidget = wibox.widget.textbox()    
+batterywidget:set_text(" | Battery | ")    
+batterywidgettimer = timer({ timeout = 5 })    
+batterywidgettimer:connect_signal("timeout",    
+  function()    
+    fh = assert(io.popen("acpi | cut -d, -f 2,3 -", "r"))    
+    batterywidget:set_text(" |" .. fh:read("*l") .. " | ")    
+    fh:close()    
+  end    
+)    
+batterywidgettimer:start()
+
 -- }}}
 
 -- {{{ Menu
@@ -183,7 +205,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.tag({ "terminal", "2", "3", "4", "5", "6", "7", "slack", "spotify" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -218,6 +240,8 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             wibox.widget.systray(),
+            net_wireless,
+			batterywidget,
             mytextclock,
             s.mylayoutbox,
         },
